@@ -14,19 +14,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(CupertinoIcons.home),
-        title: const Text(
-          'Talky App',
-        ),
+        title: const Text('Talky App'),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.search)),
-          IconButton(onPressed: (){}, icon: const Icon(Icons.more_vert))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ],
-
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
-          onPressed: (){} ,child: Icon(Icons.add_comment_rounded)
+          onPressed: () {},
+          child: Icon(Icons.add_comment_rounded),
         ),
       ),
     );
