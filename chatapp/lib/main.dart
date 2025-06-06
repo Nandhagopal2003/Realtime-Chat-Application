@@ -1,5 +1,8 @@
+import 'package:chatapp/screens/auth/login_screen.dart';
 import 'package:chatapp/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+
+late Size mq;
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 193, 193, 224),
         ),
       ),
-      home: const HomeScreen(),
+      home: const login_screen(),
     );
   }
 }
