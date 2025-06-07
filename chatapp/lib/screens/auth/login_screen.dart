@@ -1,6 +1,12 @@
+import 'dart:math';
+
 import 'package:chatapp/main.dart';
+import 'package:chatapp/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 class login_screen extends StatefulWidget {
   const login_screen({super.key});
@@ -10,6 +16,42 @@ class login_screen extends StatefulWidget {
 }
 
 class _login_screenState extends State<login_screen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(microseconds: 1500), () {});
+  }
+
+  _handleGoogleBtnClick() {
+    signInWithGoogle().then((user) {
+      log('\nUser: ${user.user}');
+      log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    });
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -24,12 +66,14 @@ class _login_screenState extends State<login_screen> {
       ),
       body: Stack(
         children: [
-          Positioned(
+          AnimatedPositioned(
             top: mq.height * .15,
             left: mq.width * .25,
             width: mq.width * .5,
+            duration: Duration(seconds: 2),
             child: Image.asset('assets/chatlogo.png'),
           ),
+
           Positioned(
             bottom: mq.height * .15,
             left: mq.width * .05,
@@ -37,28 +81,26 @@ class _login_screenState extends State<login_screen> {
             height: mq.height * .06,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                const Color.fromARGB(255, 46, 156, 50),
+                backgroundColor: const Color.fromARGB(255, 46, 156, 50),
                 shape: const StadiumBorder(),
-                elevation: 1
-
+                elevation: 1,
               ),
-              onPressed: () {},
+              onPressed: () {
+                _handleGoogleBthclick();
+              },
               icon: Image.asset('assets/google .png', height: mq.height * .03),
               label: RichText(
                 text: TextSpan(
                   style: TextStyle(color: Colors.black, fontSize: 18),
                   children: [
-                    TextSpan(text: 'sign In with ' ),
+                    TextSpan(text: 'sign In with '),
                     TextSpan(
                       text: 'Google',
-                      style: TextStyle(fontWeight: FontWeight.bold)
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ]
-                  
-
-                )
-              )
+                  ],
+                ),
+              ),
             ),
           ),
         ],
