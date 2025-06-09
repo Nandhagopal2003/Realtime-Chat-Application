@@ -1,5 +1,8 @@
-import 'package:chatapp/main.dart';
+import 'dart:math';
+
+import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/screens/auth/login_screen.dart';
+import 'package:chatapp/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,18 +15,33 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late Size mq;
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(microseconds: 1500), () {
 
-      // nav to homescreen
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const login_screen()));
-
-      // exit to full screen
+    Future.delayed(const Duration(seconds: 2), () {
+      // Exit full-screen mode
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      );
+
+      if (Apis.auth.currentUser != null) {
+        log('\nUser: ${Apis.auth.currentUser}' as num);
+
+        // Navigate to home screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else {
+        // Navigate to login screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const login_screen()),
+        );
+      }
     });
   }
 
@@ -45,27 +63,26 @@ class _SplashScreenState extends State<SplashScreen> {
             top: mq.height * .15,
             left: mq.width * .25,
             width: mq.width * .5,
-            
+
             child: Image.asset('assets/chatlogo.png'),
           ),
           Positioned(
             bottom: mq.height * .15,
-           
-            width: mq.width ,
-          
-            child: Text('Made in India', 
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20 , 
-              color: Colors.black,
-              letterSpacing: .5)
-            )
-          )
-        
+
+            width: mq.width,
+
+            child: Text(
+              'Made in India',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                letterSpacing: .5,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
-
-

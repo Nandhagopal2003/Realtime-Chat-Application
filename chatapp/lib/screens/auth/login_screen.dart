@@ -1,10 +1,12 @@
-import 'dart:math';
+import 'dart:io';
 
+import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/main.dart';
 import 'package:chatapp/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -23,33 +25,42 @@ class _login_screenState extends State<login_screen> {
   }
 
   _handleGoogleBtnClick() {
-    signInWithGoogle().then((user) {
-      log('\nUser: ${user.user}');
-      log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+    _signInWithGoogle().then((user) {
+      // ignore: unnecessary_null_comparison
+      if (user != null) {
+        log('\nUser: ${user.user}');
+        log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
     });
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential?> _signInWithGoogle() async {
+    try {
+      await InternetAddress.lookup('google.com');
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Once signed in, return the UserCredential
+      return await Apis.auth.signInWithCredential(credential);
+    } catch (e) {
+      log('_sign');
+    }
+    return null;
   }
 
   @override
@@ -86,7 +97,7 @@ class _login_screenState extends State<login_screen> {
                 elevation: 1,
               ),
               onPressed: () {
-                _handleGoogleBthclick();
+                _handleGoogleBtnClick();
               },
               icon: Image.asset('assets/google .png', height: mq.height * .03),
               label: RichText(

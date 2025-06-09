@@ -8,20 +8,23 @@ import 'firebase_options.dart';
 
 late Size mq;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // enable ful screen
+  // Enable full screen
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  // setting orirntation for portrait only
-  SystemChrome.setPreferredOrientations([
+  // Set orientation to portrait only
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((Value) {
-    _initializefirebase();
-    runApp(const MyApp());
-  });
+  ]);
+
+  // Initialize Firebase BEFORE runApp
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Run the app after Firebase is ready
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -47,8 +50,4 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
     );
   }
-}
-
-_initializefirebase() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
