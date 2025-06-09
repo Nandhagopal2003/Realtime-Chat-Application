@@ -21,7 +21,7 @@ class _login_screenState extends State<login_screen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(microseconds: 1500), () {});
+    Future.delayed(const Duration(microseconds: 3000), () {});
   }
 
   _handleGoogleBtnClick() {

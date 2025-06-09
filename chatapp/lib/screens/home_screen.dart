@@ -1,4 +1,5 @@
 import 'package:chatapp/api/apis.dart';
+import 'package:chatapp/main.dart';
 import 'package:chatapp/widgets/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index){
+        itemCount: 3,
+        padding: EdgeInsets.only(top: mq.height * .01),
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
           return const ChatUserCard();
-        }),
+        },
+      ),
     );
   }
 }
