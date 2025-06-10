@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/screens/auth/login_screen.dart';
 import 'package:chatapp/screens/home_screen.dart';
@@ -27,16 +25,17 @@ class _SplashScreenState extends State<SplashScreen> {
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       );
 
-      if (Apis.auth.currentUser != null) {
-        log('\nUser: ${Apis.auth.currentUser}' as num);
+      print("Checking login status...");
+      var user = Apis.auth.currentUser;
 
-        // Navigate to home screen
+      if (user != null) {
+        print('Logged in as: ${user.email}');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
       } else {
-        // Navigate to login screen
+        print("No user logged in");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const login_screen()),
@@ -48,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         leading: Icon(CupertinoIcons.home),
