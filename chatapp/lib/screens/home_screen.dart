@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/main.dart';
 import 'package:chatapp/screens/auth/login_screen.dart';
@@ -15,6 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final List<ChatUser> list = [];
+
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -57,15 +63,25 @@ class _HomeScreenState extends State<HomeScreen> {
       body: StreamBuilder(
         stream: Apis.firestore.collection('ChatUser').snapshots(),
         builder: (context, snapshot) {
-          final list = [];
 
-          if (snapshot.hasData) {
+          switch(snapshot.connectionState){
+
+            // if data is loading
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+              return const Center(child: CircularProgressIndicator());
+
+
+            // if some or all data is loading then show it
+            case ConnectionState.active:
+            case ConnectionState.done:
+
             final data = snapshot.data!.docs;
             for (var i in data) {
-              print('Data: ${i.data()}');
+              print('Data: ${jsonEncode(i.data())}');
               list.add(i.data()['About']);
             }
-          }
+          
 
           return ListView.builder(
             itemCount: list.length,
@@ -76,8 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
               return Text('Name: ${list[index]}');
             },
           );
+          }
+          
         },
       ), // StreamBuilder
     );
   }
 }
+
