@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final List<ChatUser> list = [];
+  // final List<ChatUser> list = [];
 
 
   @override
