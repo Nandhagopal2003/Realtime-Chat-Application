@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:chatapp/api/apis.dart';
 import 'package:chatapp/screens/home_screen.dart';
+import 'package:chatapp/screens/Gmail_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -173,17 +174,14 @@ class _login_screenState extends State<login_screen> {
                 ),
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account?"),
-                  TextButton(
-                    onPressed: () {
-                      // Add sign-up navigation
-                    },
-                    child: const Text("Sign Up"),
-                  ),
-                ],
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const Gmailscreen()),
+                  );
+                },
+                child: const Text("Sign Up"),
               ),
             ],
           ),
